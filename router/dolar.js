@@ -8,12 +8,11 @@ var year = date_ob.getFullYear();
 var date = month +"-"+(day-1)+"-"+year;
 
 router.get("/" , async (req, res, next) =>{
-    let url = `https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDolarDia(dataCotacao=@dataCotacao)?@dataCotacao='${date}'&$top=100&$skip=0&$format=json`
-    console.log(date, url);
+    let url = `http://localhost/PhpExercicios/APIAtvConversorMoedaApi/`
     let result = await fetch(url)
     .then(response => {
         return response.json();
-    }).catch(err => {return err.text()})
+    }).catch(err => {return err.json()})
     res.send(result);
 })
 router.post("/", async (req, res) =>{
@@ -24,9 +23,9 @@ router.post("/", async (req, res) =>{
     let result = await fetch("http://localhost:8090/dolar").then(response => {
         return response.json();
     })
-    valor  =  real/result.value[0].cotacaoCompra
+    valor  =  real/result.cotacaoCompra
     console.log(valor);
-    res.send(`valor para compra: ${result.value[0].cotacaoCompra} \nValor para venda ${result.value[0].cotacaoVenda} \nValor para conversão ${real} \nVvalor convertido em dolar ${valor.toFixed(2)} `).status(200);
+    res.send(`valor para compra: ${result.cotacaoCompra} \nValor para venda ${result.cotacaoVenda} \nValor para conversão ${real} \nVvalor convertido em dolar ${valor.toFixed(2)} `).status(200);
 })
 
 module.exports = router;
